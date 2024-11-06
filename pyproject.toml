@@ -1,0 +1,14 @@
+[project]
+name = "sociaML_example"
+version = "0.1.0"
+description = "example project for sociaml"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.0.2",
+    "pandas>=2.2.3",
+    "sociaml",
+]
+
+[tool.uv.sources]
+sociaml = { git = "https://github.com/davidrzs/sociaML" }
