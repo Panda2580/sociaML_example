@@ -1,6 +1,6 @@
 # sociaml demo
 
-Example of how to use the sociaml library for video processing and transcription.
+Example of how to use the [sociaML library](https://github.com/davidrzs/sociaML) for video processing and transcription.
 
 ## Setup
 
@@ -14,8 +14,11 @@ Example of how to use the sociaml library for video processing and transcription
 # Install dependencies
 uv sync
 
-# Run the demo
-uv run main.py
+# Run the preprocessing
+uv run preprocess.py
+
+# Run the main analysis
+uv run preprocess.py
 ```
 
-See `main.py` for the implementation details.
+You will need a Huggingface API key which has access to [Pyannote](https://huggingface.co/pyannote/speaker-diarization-3.1) to run the preprocessing.
