@@ -4,7 +4,7 @@ Example of how to use the [sociaML library](https://github.com/davidrzs/sociaML)
 
 ## Setup
 
-1. Use [uv](https://github.com/astral-sh/uv) for managing Python virtual environment
+1. Use [uv](https://github.com/astral-sh/uv) to set up the virtual environment.
 2. Get your HuggingFace token from https://huggingface.co/settings/tokens
 3. Replace `PUTKEYHERE` in main.py with your token
 
@@ -18,7 +18,7 @@ uv sync
 uv run preprocess.py
 
 # Run the main analysis
-uv run preprocess.py
+uv run analyze.py
 ```
 
 You will need a Huggingface API key which has access to [Pyannote](https://huggingface.co/pyannote/speaker-diarization-3.1) to run the preprocessing.
