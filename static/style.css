@@ -1,0 +1,31 @@
+/* General chat container styles */
+.chat-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Chat message bubbles */
+.chat-message {
+    max-width: 80%;
+    padding: 10px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Speaker-specific colors */
+.chat-speaker-0 { background-color: #e1f5fe; } /* Light blue */
+.chat-speaker-1 { background-color: #c8e6c9; margin-left: auto } /* Light green */
+.chat-speaker-2 { background-color: #ffccbc; } /* Light orange */
+.chat-speaker-3 { background-color: #d1c4e9; } /* Light purple */
+.chat-speaker-4 { background-color: #ffecb3; } /* Light yellow */
+
+
+/* Speaker name styling */
+.chat-speaker {
+    font-weight: bold;
+    margin-bottom: 3px;
+}
