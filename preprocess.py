@@ -5,6 +5,7 @@ import os
 
 # Set the API key directly in the script
 os.environ["PYANNOTE_API_KEY"] = "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"
+#pyannote_api_key = os.getenv("PYANNOTE_API_KEY")
 
 # Paths provided through command-line arguments
 video_file = sys.argv[1]
@@ -18,8 +19,9 @@ audio, samplerate = audio_extractor.process(video_file, audio_path=audio_file)
 # Transcribe and anonymize
 transcriber = TranscriberAndDiarizer(
     pyannote_api_key=os.getenv("PYANNOTE_API_KEY"),
-    merge_consecutive_speakers=False
+    merge_consecutive_speakers=False   
 )
+
 anonymizer = Anonymizer()
 transcript = transcriber.process(video_file)
 transcript = anonymizer.process(transcript)

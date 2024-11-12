@@ -12,9 +12,9 @@ os.environ["PYANNOTE_API_KEY"] = "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"
 
 # preprocess video, only the viddeo_file must exist, the other two will be created
 
-video_file = "./data/convo.webm"
-audio_file = "./data/convo.mp3"
-transcription_file = "./data/convo.json"
+video_file = "./static/data/convo1.webm"
+audio_file = "./static/data/convo1.mp3"
+transcription_file = "./static/data/convo1.json"
 
 with open(transcription_file) as f:
     transcription = Transcription.from_json(f.read())

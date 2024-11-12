@@ -1,17 +1,21 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, send_from_directory, url_for
 import json
+import logging
 import subprocess
 
 app = Flask(__name__)
 app.config['DATA_FOLDER'] = './static/data/'  # For processed files
 app.config['UPLOAD_FOLDER'] = './static/data/'  # Same as DATA_FOLDER for now
 
-# Ensure the data directory exists
 os.makedirs(app.config['DATA_FOLDER'], exist_ok=True)
 
 # Define speaker colors (add more colors if necessary)
 colors = ['chat-speaker-0', 'chat-speaker-1', 'chat-speaker-2', 'chat-speaker-3', 'chat-speaker-4', 'chat-speaker-5', 'chat-speaker-6']
+
+# Logging setup
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 @app.route('/')
 def index():
@@ -29,13 +33,14 @@ def upload():
     video_file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
     file.save(video_file_path)
 
-    # Define paths for the audio and transcription output files based on the uploaded filename
+    # Define paths for files based on the uploaded filename
     base_filename = os.path.splitext(file.filename)[0]
     audio_file_path = os.path.join(app.config['DATA_FOLDER'], f"{base_filename}.mp3")
     transcription_file_path = os.path.join(app.config['DATA_FOLDER'], f"{base_filename}.json")
 
-    # Set the environment variable for the API key (if necessary for preprocess.py)
+    # Set the environment variable for the API key
     os.environ["PYANNOTE_API_KEY"] = "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"
+    logger.info(f"PYANNOTE_API_KEY set: {os.getenv('PYANNOTE_API_KEY')}")
 
     # Run preprocess.py with the appropriate arguments using subprocess.Popen
     try:
@@ -46,8 +51,10 @@ def upload():
         )
         stdout, stderr = process.communicate()  # Wait for the process to finish
         if process.returncode != 0:
+            logger.error(f"Error processing video: {stderr.decode()}")
             return f"Error processing video: {stderr.decode()}", 500
     except Exception as e:
+        logger.error(f"Error running preprocess.py: {e}")
         return f"Error running preprocess.py: {str(e)}", 500
 
     # Load chat data from the JSON transcription file
@@ -69,11 +76,27 @@ def upload():
             speaker_classes[speaker] = colors[color_index]
             color_index = (color_index + 1) % len(colors)
 
-    return render_template('results.html', chat_data=chat_data, speaker_classes=speaker_classes)
+    # Render the results.html page and pass the filename for the download button
+    return render_template('results.html', chat_data=chat_data, speaker_classes=speaker_classes, transcription_filename=f"{base_filename}.json")
 
 @app.route('/back', methods=['POST'])
 def back():
     return redirect(url_for('index'))
+
+@app.route('/download_transcript/<filename>')
+def download_transcript(filename):
+    transcription_file = os.path.join(app.config['DATA_FOLDER'], filename)
+    
+    if not os.path.exists(transcription_file):
+        logging.error("Transcription file not found.")
+        return "Transcription file not found", 404
+    
+    return send_from_directory(
+        directory=app.config['DATA_FOLDER'],
+        path=filename,
+        as_attachment=True
+    )
+
 
 if __name__ == '__main__':
     app.run(debug=True)
